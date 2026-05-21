@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Меню</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#BFA46A;--gold-dim:#8C7545;--dark:#141210;--dark2:#1E1A16;--dark3:#28231D;--cream2:#C8B99A;--text:#EDE3D0;--muted:#8A7D68;--sep:rgba(191,164,106,0.18);--danger:#C86060}
+html,body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+.nav{display:flex;background:var(--dark2);border-bottom:1px solid var(--sep);position:sticky;top:0;z-index:100}
+.nav-btn{flex:1;padding:15px 8px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.25s;position:relative}
+.nav-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+.nav-btn:hover:not(.on){color:var(--text)}
+.cart-badge{position:absolute;top:8px;right:calc(50% - 24px);background:var(--gold);color:var(--dark);font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;padding:0 3px}
+.cart-badge.show{opacity:1}
+.page{display:none}.page.on{display:block}
+.hero{text-align:center;padding:48px 24px 32px;background:var(--dark2);border-bottom:1px solid var(--sep)}
+.hero-name{font-family:'Fraunces',serif;font-size:48px;font-weight:300;color:var(--gold);letter-spacing:5px;line-height:1}
+.hero-rule{width:52px;height:1px;background:var(--gold-dim);margin:14px auto}
+.hero-sub{font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--muted)}
+.type-nav{display:flex;background:var(--dark2);border-bottom:1px solid var(--sep)}
+.type-btn{flex:1;padding:13px;text-align:center;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.2s}
+.type-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+.type-btn:hover:not(.on){color:var(--text)}
+.pills{display:flex;gap:8px;padding:16px 16px 6px;overflow-x:auto;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{white-space:nowrap;padding:6px 14px;border-radius:100px;border:1px solid var(--sep);background:none;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:.2s;flex-shrink:0}
+.pill.on{background:var(--gold);color:var(--dark);border-color:var(--gold);font-weight:500}
+.pill:hover:not(.on){border-color:var(--gold-dim);color:var(--cream2)}
+.menu-body{padding:20px 16px 140px;max-width:900px;margin:0 auto}
+.cat-block{margin-bottom:40px}
+.cat-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.cat-header-line{flex:1;height:1px;background:var(--sep)}
+.cat-title{font-family:'Fraunces',serif;font-size:11px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.cat-deco{width:5px;height:5px;border:1px solid var(--gold-dim);transform:rotate(45deg);flex-shrink:0}
+.items-wrap{display:flex;flex-direction:column;gap:8px}
+.dish{display:flex;gap:14px;padding:14px;background:var(--dark2);border:1px solid var(--sep);border-radius:10px;align-items:center;transition:.2s}
+.dish:hover{border-color:rgba(191,164,106,0.3)}
+.dish-photo{width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.dish-photo-placeholder{width:80px;height:80px;border-radius:8px;flex-shrink:0;background:var(--dark3);display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.3}
+.dish-middle{flex:1;min-width:0}
+.dish-name{font-family:'Fraunces',serif;font-size:19px;font-weight:400;color:var(--text);line-height:1.2}
+.dish-comp{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6}
+.dish-price{font-family:'Fraunces',serif;font-size:18px;color:var(--gold);margin-top:6px}
+.dish-price-unit{font-family:'Inter',sans-serif;font-size:10px;color:var(--muted)}
+.dish-right{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.add-btn{width:36px;height:36px;border-radius:50%;background:var(--gold);border:none;color:var(--dark);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;line-height:1}
+.add-btn:hover{opacity:.85;transform:scale(1.08)}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qty-btn{width:30px;height:30px;border-radius:50%;background:var(--dark3);border:1px solid var(--sep);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+.qty-num{font-family:'Fraunces',serif;font-size:20px;color:var(--gold);min-width:22px;text-align:center}
+.empty-cat{padding:20px 0;text-align:center;color:var(--muted);font-size:13px}
+.hint{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;line-height:1.9}
+#cp{padding:0 0 40px}
+.cart-top{padding:28px 20px 20px;background:var(--dark2);border-bottom:1px solid var(--sep)}
+.cart-top h2{font-family:'Fraunces',serif;font-size:34px;font-weight:300;color:var(--gold)}
+.cart-top p{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:1px}
+.cart-body{max-width:680px;margin:0 auto;padding:16px 16px 0}
+.cart-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--dark2);border:1px solid var(--sep);border-radius:10px;margin-bottom:8px}
+.cart-item-photo{width:52px;height:52px;border-radius:7px;object-fit:cover;flex-shrink:0}
+.cart-item-photo-empty{width:52px;height:52px;border-radius:7px;background:var(--dark3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:.4}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-size:14px;font-weight:500}
+.cart-item-unit{font-size:11px;color:var(--muted);margin-top:2px}
+.cart-item-ctrl{display:flex;align-items:center;gap:8px}
+.cart-qty-btn{width:28px;height:28px;border-radius:50%;background:var(--dark3);border:1px solid var(--sep);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.cart-qty-btn:hover{border-color:var(--gold);color:var(--gold)}
+.cart-qty-num{font-family:'Fraunces',serif;font-size:18px;color:var(--gold);min-width:20px;text-align:center}
+.cart-item-total{font-family:'Fraunces',serif;font-size:17px;color:var(--gold);margin-left:4px;white-space:nowrap;flex-shrink:0}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-top:1px solid var(--sep);margin-top:8px}
+.total-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.total-val{font-family:'Fraunces',serif;font-size:32px;color:var(--gold)}
+.total-unit{font-size:12px;color:var(--muted)}
+.cart-actions{display:flex;gap:10px;margin-top:14px}
+.cart-float{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:none;width:calc(100% - 32px);max-width:500px}
+.cart-float.show{display:flex}
+.cart-float-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--gold);color:var(--dark);border:none;border-radius:14px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;cursor:pointer;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:.2s}
+.cart-float-btn:hover{opacity:.9;transform:translateY(-2px)}
+.cart-float-left{display:flex;align-items:center;gap:10px}
+.cart-float-count{background:rgba(0,0,0,0.15);border-radius:100px;padding:3px 10px;font-size:12px;font-weight:700}
+.cart-float-sum{font-size:15px;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.2s}
+.btn-g{background:var(--gold);color:var(--dark);font-weight:600}
+.btn-g:hover{opacity:.88}
+.btn-outline{background:none;border:1px solid var(--sep);color:var(--muted)}
+.btn-outline:hover{border-color:var(--gold-dim);color:var(--text)}
+.btn-danger{background:none;border:1px solid rgba(200,80,80,0.2);color:var(--danger);cursor:pointer;font-family:'Inter',sans-serif;transition:.2s;border-radius:8px;padding:12px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+.btn-danger:hover{background:rgba(200,80,80,0.1)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:.25s;pointer-events:none}
+.overlay.show{opacity:1;pointer-events:all}
+.modal-box{background:var(--dark2);border:1px solid var(--sep);border-radius:14px;padding:24px 20px;width:100%;max-width:320px;transform:scale(.96);transition:.25s}
+.overlay.show .modal-box{transform:scale(1)}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--gold);color:var(--dark);padding:10px 24px;border-radius:100px;font-size:12px;font-weight:500;letter-spacing:1px;opacity:0;transition:.3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <button class="nav-btn on" onclick="goPage('mp')">&#9474; Меню</button>
+  <button class="nav-btn" onclick="goPage('cp')">
+    Обрані
+    <span class="cart-badge" id="cartBadge">0</span>
+  </button>
+</nav>
+
+<div id="mp" class="page on">
+  <div class="hero">
+    <div class="hero-name">ВЗДС</div>
+    <div class="hero-rule"></div>
+    <div class="hero-sub">Меню</div>
+  </div>
+  <div class="type-nav">
+    <button class="type-btn on" onclick="setType('food',this)">&#127869; Їжа</button>
+    <button class="type-btn" onclick="setType('drink',this)">&#127865; Коктейлі</button>
+    <button class="type-btn" onclick="setType('hookah',this)">&#128168; Кальяни</button>
+  </div>
+  <div class="pills" id="pills"></div>
+  <div class="menu-body" id="mbody"></div>
+</div>
+
+<div id="cp" class="page">
+  <div class="cart-top">
+    <h2>Обрані</h2>
+    <p>Підрахунок суми замовлення</p>
+  </div>
+  <div class="cart-body">
+    <div id="cartEmpty" style="display:none">
+      <div class="hint">Список порожній.<br>Оберіть страви з меню &#8594;</div>
+      <div style="text-align:center;margin-top:8px">
+        <button class="btn btn-g" onclick="goPage('mp')">&#8592; До меню</button>
+      </div>
+    </div>
+    <div id="cartItemsList"></div>
+    <div id="cartFooter" style="display:none">
+      <div class="total-row">
+        <span class="total-label">Разом</span>
+        <span class="total-val" id="cartTotal">0 <span class="total-unit">грн</span></span>
+      </div>
+      <div class="cart-actions">
+        <button class="btn btn-outline" onclick="goPage('mp')" style="flex:1">&#8592; Меню</button>
+        <button class="btn-danger" onclick="clearCart()" style="flex:1">&#128465; Очистити</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cart-float" id="cartFloat">
+  <button class="cart-float-btn" onclick="goPage('cp')">
+    <div class="cart-float-left">
+      <span>Обрані</span>
+      <span class="cart-float-count" id="floatCount">0</span>
+    </div>
+    <span class="cart-float-sum" id="floatSum">0 грн</span>
+  </button>
+</div>
+
+<div class="overlay" id="confirmOverlay">
+  <div class="modal-box">
+    <div style="font-size:15px;color:var(--text);line-height:1.5;margin-bottom:20px;text-align:center" id="confirmText"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeConfirm()">Скасувати</button>
+      <button class="btn btn-g" style="flex:1" id="confirmBtn">Так</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var CATS  = [
+  {
+    "id": "c1",
+    "name": "Закуски",
+    "type": "food"
+  },
+  {
+    "id": "c2",
+    "name": "Салати",
+    "type": "food"
+  },
+  {
+    "id": "c3",
+    "name": "Страви з риби",
+    "type": "food"
+  },
+  {
+    "id": "c4",
+    "name": "Страви з птиці",
+    "type": "food"
+  },
+  {
+    "id": "c5",
+    "name": "Страви зі свинини",
+    "type": "food"
+  },
+  {
+    "id": "c6",
+    "name": "Гарячі страви",
+    "type": "food"
+  },
+  {
+    "id": "c7",
+    "name": "Страви з картоплі",
+    "type": "food"
+  },
+  {
+    "id": "c8",
+    "name": "Коктейлі",
+    "type": "drink"
+  },
+  {
+    "id": "c9",
+    "name": "Кальяни",
+    "type": "hookah"
+  },
+  {
+    "id": "c10",
+    "name": "Мангал",
+    "type": "food"
+  },
+  {
+    "id": "c11",
+    "name": "Десерти",
+    "type": "food"
+  }
+];
+var ITEMS = [
+  {
+    "id": "i001",
+    "catId": "c1",
+    "name": "Асорті з м'яса (250г)",
+    "comp": "Ковбаса, балик, сир",
+    "price": 300,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i002",
+    "catId": "c1",
+    "name": "Асорті овочеве (250г)",
+    "comp": "Помідор, огірок, перець болгарський",
+    "price": 100,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i003",
+    "catId": "c1",
+    "name": "Фрі плато",
+    "comp": "Нагетси, кальмари, картопля фрі",
+    "price": 490,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i004",
+    "catId": "c1",
+    "name": "Сирна тарілка",
+    "comp": "4 види сиру, мед, горіхи",
+    "price": 450,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i005",
+    "catId": "c1",
+    "name": "Сало (150г)",
+    "comp": "",
+    "price": 100,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i006",
+    "catId": "c1",
+    "name": "Брускета з червоною рибою",
+    "comp": "",
+    "price": 85,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i007",
+    "catId": "c1",
+    "name": "Брускета з ікрою",
+    "comp": "",
+    "price": 85,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i008",
+    "catId": "c1",
+    "name": "Апельсин",
+    "comp": "",
+    "price": 70,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i009",
+    "catId": "c1",
+    "name": "Яблуко",
+    "comp": "",
+    "price": 50,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i010",
+    "catId": "c1",
+    "name": "Банан",
+    "comp": "",
+    "price": 50,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i011",
+    "catId": "c1",
+    "name": "Лимон",
+    "comp": "",
+    "price": 50,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i012",
+    "catId": "c1",
+    "name": "Ківі",
+    "comp": "",
+    "price": 50,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i013",
+    "catId": "c1",
+    "name": "Кальмари смажені",
+    "comp": "",
+    "price": 145,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i014",
+    "catId": "c1",
+    "name": "Язик під майонезом",
+    "comp": "",
+    "price": 95,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i015",
+    "catId": "c1",
+    "name": "Помідори \"Гостринка\"",
+    "comp": "Помідор, сир, часник, майонез",
+    "price": 85,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i016",
+    "catId": "c1",
+    "name": "Шампіньйони смажені в сметані",
+    "comp": "",
+    "price": 90,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i017",
+    "catId": "c1",
+    "name": "Шампіньйони смажені",
+    "comp": "",
+    "price": 85,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i101",
+    "catId": "c2",
+    "name": "Веселка",
+    "comp": "Помідор, огірок, болгарський перець, листя салату, курка, соєвий соус",
+    "price": 150,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i102",
+    "catId": "c2",
+    "name": "Веселка з креветкою",
+    "comp": "Помідор, огірок, болгарський перець, листя салату, креветка, авокадо, соєвий соус",
+    "price": 170,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i103",
+    "catId": "c2",
+    "name": "Грецький",
+    "comp": "Сир Фета, болгарський перець, маслини, помідор, огірок, оливкова олія",
+    "price": 135,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i104",
+    "catId": "c2",
+    "name": "Хмельницький з олією",
+    "comp": "Капуста, морква, олія",
+    "price": 50,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i105",
+    "catId": "c2",
+    "name": "Хмельницький з майонезом",
+    "comp": "Капуста, морква, майонез",
+    "price": 60,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i106",
+    "catId": "c2",
+    "name": "Оригінальний",
+    "comp": "Курка, крабові палички, огірок, яйце, ананас, кукурудза, майонез",
+    "price": 145,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i107",
+    "catId": "c2",
+    "name": "Свіжий з олією",
+    "comp": "Помідор, огірок, олія",
+    "price": 60,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i108",
+    "catId": "c2",
+    "name": "Свіжий з майонезом",
+    "comp": "Помідор, огірок, майонез",
+    "price": 70,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i109",
+    "catId": "c2",
+    "name": "Коктейль",
+    "comp": "Курка, шампіньйони, балик, яйце, майонез",
+    "price": 160,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i110",
+    "catId": "c2",
+    "name": "Африканська роза",
+    "comp": "Копчене м'ясо, ананас, яйце, кукурудза, помідор, майонез",
+    "price": 120,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i111",
+    "catId": "c2",
+    "name": "Язик з ківі",
+    "comp": "Язик, яйце, цибуля, сир, ківі, майонез",
+    "price": 130,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i112",
+    "catId": "c2",
+    "name": "Цезар",
+    "comp": "Курка, листя салату, сухарі, помідори чері, перепелині яйця",
+    "price": 160,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i113",
+    "catId": "c2",
+    "name": "Цезар з червоною рибою",
+    "comp": "Філе червоної риби, листя салату, сухарі, помідори чері, перепелині яйця, сир",
+    "price": 270,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i114",
+    "catId": "c2",
+    "name": "Цезар з бастурмою",
+    "comp": "Бастурма, листя салату, сухарі, помідори чері, перепелині яйця, сир",
+    "price": 270,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i115",
+    "catId": "c2",
+    "name": "Шопський",
+    "comp": "Листя салату, помідор, огірок, маслини, сир фета, заправка",
+    "price": 145,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i116",
+    "catId": "c2",
+    "name": "Капрезе",
+    "comp": "Помідор, моцарела, базилік, соєвий соус, оливкова олія",
+    "price": 170,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i201",
+    "catId": "c7",
+    "name": "Картопляне пюре",
+    "comp": "",
+    "price": 60,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i202",
+    "catId": "c7",
+    "name": "Картопля фрі",
+    "comp": "",
+    "price": 70,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i203",
+    "catId": "c7",
+    "name": "Картопля по-селянські",
+    "comp": "",
+    "price": 70,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i204",
+    "catId": "c7",
+    "name": "Картопля на пательні з сиром і грибами",
+    "comp": "",
+    "price": 120,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i205",
+    "catId": "c7",
+    "name": "Дерун класичний з сметаною",
+    "comp": "",
+    "price": 90,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i206",
+    "catId": "c7",
+    "name": "Дерун в горщику з куркою",
+    "comp": "",
+    "price": 135,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i207",
+    "catId": "c7",
+    "name": "Дерун з свининою",
+    "comp": "",
+    "price": 135,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i208",
+    "catId": "c7",
+    "name": "Дерун \"Богатир\"",
+    "comp": "",
+    "price": 205,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i301",
+    "catId": "c6",
+    "name": "Пельмені по-домашньому (200г)",
+    "comp": "",
+    "price": 95,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i302",
+    "catId": "c6",
+    "name": "Пельмені по-домашньому (150г)",
+    "comp": "",
+    "price": 70,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i303",
+    "catId": "c6",
+    "name": "Пельмені в бульйоні (250г)",
+    "comp": "",
+    "price": 60,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i304",
+    "catId": "c6",
+    "name": "Вареники з картоплею (250г)",
+    "comp": "",
+    "price": 65,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i305",
+    "catId": "c6",
+    "name": "Вареники з м'ясом (200г)",
+    "comp": "",
+    "price": 95,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i306",
+    "catId": "c6",
+    "name": "Вареники з капустою (250г)",
+    "comp": "",
+    "price": 65,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i307",
+    "catId": "c6",
+    "name": "Зажарка до вареників (50г)",
+    "comp": "",
+    "price": 20,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i401",
+    "catId": "c3",
+    "name": "Риба смажена (110г)",
+    "comp": "",
+    "price": 110,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i402",
+    "catId": "c3",
+    "name": "Риба смажена в сирі (150г)",
+    "comp": "",
+    "price": 145,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i403",
+    "catId": "c3",
+    "name": "Риба печена з овочами під сиром (170г)",
+    "comp": "",
+    "price": 160,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i501",
+    "catId": "c4",
+    "name": "Відбивна куряча в сирі (130г)",
+    "comp": "Курка, сир",
+    "price": 165,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i502",
+    "catId": "c4",
+    "name": "Відбивна куряча (120г)",
+    "comp": "",
+    "price": 105,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i503",
+    "catId": "c4",
+    "name": "Філе під ананасом (150г)",
+    "comp": "Курка, ананас, сир",
+    "price": 150,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i504",
+    "catId": "c4",
+    "name": "Нагетси (105г)",
+    "comp": "",
+    "price": 105,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i505",
+    "catId": "c4",
+    "name": "Котлети курячі з сиром (120г)",
+    "comp": "",
+    "price": 120,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i601",
+    "catId": "c5",
+    "name": "Відбивна \"Апетитна\" (150г)",
+    "comp": "",
+    "price": 130,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i602",
+    "catId": "c5",
+    "name": "Відбивна по-Київські (110г)",
+    "comp": "",
+    "price": 115,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i603",
+    "catId": "c5",
+    "name": "Відбивна \"Арлекіно\" (175г)",
+    "comp": "",
+    "price": 150,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i604",
+    "catId": "c5",
+    "name": "Відбивна \"Вкусняшка\" (150г)",
+    "comp": "",
+    "price": 150,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i605",
+    "catId": "c5",
+    "name": "Печінка смажена з цибулею (130г)",
+    "comp": "",
+    "price": 85,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i606",
+    "catId": "c5",
+    "name": "Млинці з м'ясом (4шт)",
+    "comp": "",
+    "price": 130,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i701",
+    "catId": "c10",
+    "name": "Шашлик з свинини (100г)",
+    "comp": "",
+    "price": 120,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i702",
+    "catId": "c10",
+    "name": "Шашлик з курки (100г)",
+    "comp": "",
+    "price": 75,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i703",
+    "catId": "c10",
+    "name": "Лаваш на грилі",
+    "comp": "",
+    "price": 80,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i801",
+    "catId": "c11",
+    "name": "Налисник з домашнім сиром (4шт)",
+    "comp": "",
+    "price": 100,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i802",
+    "catId": "c11",
+    "name": "Налисник з маком (4шт)",
+    "comp": "",
+    "price": 105,
+    "type": "food",
+    "photo": null
+  },
+  {
+    "id": "i803",
+    "catId": "c11",
+    "name": "Морозиво (3 кульки)",
+    "comp": "Пломбір, фісташка, лайм, лісова ягода, тофі, полуниця, шоколад",
+    "price": 60,
+    "type": "food",
+    "photo": null
+  }
+];
+
+var cart = [];
+var menuType = 'food';
+var menuCat  = null;
+
+try { var cv = localStorage.getItem('cartClean'); if (cv) cart = JSON.parse(cv); } catch(e) {}
+
+function saveCart() { try { localStorage.setItem('cartClean', JSON.stringify(cart)); } catch(e) {} }
+
+function toast(m) {
+  var t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('on');
+  setTimeout(function(){ t.classList.remove('on'); }, 2200);
+}
+function showConfirm(text, cb) {
+  document.getElementById('confirmText').textContent = text;
+  document.getElementById('confirmOverlay').classList.add('show');
+  document.getElementById('confirmBtn').onclick = function(){ closeConfirm(); cb(); };
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); }
+
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.nav-btn')[id === 'mp' ? 0 : 1].classList.add('on');
+  if (id === 'mp') renderMenu(); else renderCart();
+}
+
+function getTotal() {
+  return cart.reduce(function(s, ci) {
+    var it = ITEMS.find(function(i){ return i.id === ci.itemId; });
+    return it ? s + it.price * ci.qty : s;
+  }, 0);
+}
+function getCount() { return cart.reduce(function(s, ci){ return s + ci.qty; }, 0); }
+
+function updateCartUI() {
+  var count = getCount(), total = getTotal();
+  document.getElementById('cartBadge').textContent = count;
+  document.getElementById('cartBadge').classList.toggle('show', count > 0);
+  document.getElementById('cartFloat').classList.toggle('show', count > 0);
+  document.getElementById('floatCount').textContent = count;
+  document.getElementById('floatSum').textContent = Math.round(total) + ' грн';
+}
+
+function addToCart(id) {
+  var ci = cart.find(function(c){ return c.itemId === id; });
+  if (ci) { ci.qty++; } else { cart.push({itemId: id, qty: 1}); }
+  saveCart(); updateCartUI(); renderMenu();
+  if (document.getElementById('cp').classList.contains('on')) renderCart();
+  else toast('Додано до обраних!');
+}
+function removeFromCart(id) {
+  var ci = cart.find(function(c){ return c.itemId === id; });
+  if (!ci) return;
+  ci.qty--;
+  if (ci.qty <= 0) cart = cart.filter(function(c){ return c.itemId !== id; });
+  saveCart(); updateCartUI(); renderMenu();
+  if (document.getElementById('cp').classList.contains('on')) renderCart();
+}
+function getQty(id) { var ci = cart.find(function(c){ return c.itemId === id; }); return ci ? ci.qty : 0; }
+
+function clearCart() {
+  showConfirm('Очистити список обраних?', function(){
+    cart = []; saveCart(); updateCartUI(); renderMenu(); renderCart();
+  });
+}
+
+function renderCart() {
+  var isEmpty = cart.length === 0;
+  document.getElementById('cartEmpty').style.display  = isEmpty ? 'block' : 'none';
+  document.getElementById('cartFooter').style.display = isEmpty ? 'none'  : 'block';
+  var el = document.getElementById('cartItemsList');
+  if (isEmpty) { el.innerHTML = ''; return; }
+  document.getElementById('cartTotal').innerHTML = Math.round(getTotal()) + ' <span class="total-unit">грн</span>';
+  var h = '';
+  cart.forEach(function(ci) {
+    var it = ITEMS.find(function(i){ return i.id === ci.itemId; });
+    if (!it) return;
+    var thumb = it.photo
+      ? '<img class="cart-item-photo" src="' + it.photo + '" alt="">'
+      : '<div class="cart-item-photo-empty">&#127869;</div>';
+    var iid = it.id;
+    h += '<div class="cart-item">' + thumb
+      + '<div class="cart-item-info"><div class="cart-item-name">' + it.name + '</div>'
+      + '<div class="cart-item-unit">' + Math.round(it.price) + ' грн &times; ' + ci.qty + '</div></div>'
+      + '<div class="cart-item-ctrl">'
+      + '<button class="cart-qty-btn" data-id="' + iid + '" data-act="remove">&#8722;</button>'
+      + '<span class="cart-qty-num">' + ci.qty + '</span>'
+      + '<button class="cart-qty-btn" data-id="' + iid + '" data-act="add">&#43;</button>'
+      + '</div>'
+      + '<div class="cart-item-total">' + Math.round(it.price * ci.qty) + ' грн</div>'
+      + '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function setType(t, btn) {
+  menuType = t; menuCat = null;
+  document.querySelectorAll('.type-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on'); renderMenu();
+}
+function filterCat(id) { menuCat = id; renderPills(); renderDishes(); }
+function renderMenu() { renderPills(); renderDishes(); }
+
+function renderPills() {
+  var cats = CATS.filter(function(c){ return c.type === menuType; });
+  if (menuCat === null && cats.length > 0) { menuCat = cats[0].id; }
+  var h = '';
+  cats.forEach(function(c) {
+    h += '<button class="pill' + (menuCat === c.id ? ' on' : '') + '" data-cat="' + c.id + '">' + c.name + '</button>';
+  });
+  document.getElementById('pills').innerHTML = h;
+}
+
+function renderDishes() {
+  var cats = CATS.filter(function(c){ return c.type === menuType; });
+  var vis  = menuCat ? cats.filter(function(c){ return c.id === menuCat; }) : cats;
+  var el   = document.getElementById('mbody');
+  if (!vis.length) { el.innerHTML = '<div class="hint">Немає позицій.</div>'; return; }
+  var h = '';
+  vis.forEach(function(cat) {
+    var items = ITEMS.filter(function(i){ return i.catId === cat.id; });
+    h += '<div class="cat-block">'
+      + '<div class="cat-header"><div class="cat-header-line"></div><div class="cat-deco"></div>'
+      + '<div class="cat-title">' + cat.name + '</div>'
+      + '<div class="cat-deco"></div><div class="cat-header-line"></div></div>';
+    if (!items.length) {
+      h += '<div class="empty-cat">Немає позицій</div>';
+    } else {
+      h += '<div class="items-wrap">';
+      items.forEach(function(it) {
+        var qty   = getQty(it.id);
+        var photo = it.photo
+          ? '<img class="dish-photo" src="' + it.photo + '" alt="' + it.name + '">'
+          : '<div class="dish-photo-placeholder">&#127869;</div>';
+        var ctrl  = qty > 0
+          ? '<div class="qty-ctrl">'
+            + '<button class="qty-btn" data-id="' + it.id + '" data-act="remove">&#8722;</button>'
+            + '<span class="qty-num">' + qty + '</span>'
+            + '<button class="qty-btn" data-id="' + it.id + '" data-act="add">&#43;</button>'
+            + '</div>'
+          : '<button class="add-btn" data-id="' + it.id + '" data-act="add">+</button>';
+        h += '<div class="dish">' + photo
+          + '<div class="dish-middle">'
+          + '<div class="dish-name">' + it.name + '</div>'
+          + (it.comp ? '<div class="dish-comp">' + it.comp + '</div>' : '')
+          + '<div class="dish-price">' + Math.round(it.price) + ' <span class="dish-price-unit">грн</span></div>'
+          + '</div><div class="dish-right">' + ctrl + '</div></div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+
+// Event delegation
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('[data-act]');
+  if (btn) {
+    var id  = btn.getAttribute('data-id');
+    var act = btn.getAttribute('data-act');
+    if (act === 'add')    addToCart(id);
+    if (act === 'remove') removeFromCart(id);
+    return;
+  }
+  var pill = e.target.closest('[data-cat]');
+  if (pill) {
+    filterCat(pill.getAttribute('data-cat'));
+  }
+});
+
+updateCartUI();
+renderMenu();
+</script>
+</body>
+</html>
